@@ -250,6 +250,17 @@ for index, question in enumerate(
                 f"💡 Feedback: {result['feedback']}"
             )
 
+            if result["covered"]:
+
+                st.success(
+                     f"✅ Covered Concepts: {', '.join(result['covered'])}"
+                 )
+            if result["missing"]:
+
+                st.warning(
+                     f"❌ Missing Concepts: {', '.join(result['missing'])}"
+                 )
+
 
 
 # ---------------- Interview Progress ----------------
