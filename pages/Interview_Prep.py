@@ -56,9 +56,7 @@ difficulty = st.selectbox(
 
 # Question Database
 
-
 questions = {
-
 
 "AI Engineer": {
 
@@ -84,7 +82,6 @@ questions = {
 ]
 
 },
-
 
 
 "Machine Learning Engineer": {
@@ -113,7 +110,6 @@ questions = {
 },
 
 
-
 "Data Scientist": {
 
 "Beginner": [
@@ -140,7 +136,6 @@ questions = {
 },
 
 
-
 "Data Analyst": {
 
 "Beginner": [
@@ -165,7 +160,6 @@ questions = {
 ]
 
 },
-
 
 
 "Full Stack Developer": {
@@ -197,9 +191,11 @@ questions = {
 
 
 
+selected_questions = questions[target_role][difficulty]
+
+
 
 # Display Questions
-
 
 st.divider()
 
@@ -210,8 +206,12 @@ st.subheader(
 
 
 
+answered_questions = 0
+
+
+
 for index, question in enumerate(
-    questions[target_role][difficulty],
+    selected_questions,
     start=1
 ):
 
@@ -220,20 +220,79 @@ for index, question in enumerate(
     )
 
 
-    st.text_area(
+    answer = st.text_area(
         "Your Answer",
-        key=f"{target_role}_{difficulty}_{index}"
+        key=f"answer_{target_role}_{difficulty}_{index}"
     )
 
 
+    if answer.strip():
 
-# HR Section
+        answered_questions += 1
+
+
+
+
+# ---------------- Interview Progress ----------------
+
+
+total_questions = len(selected_questions)
+
+
+
+if total_questions > 0:
+
+    interview_progress = int(
+        (answered_questions / total_questions) * 100
+    )
+
+else:
+
+    interview_progress = 0
+
+
+
+# Save progress
+
+st.session_state["interview_progress"] = interview_progress
+
 
 
 st.divider()
 
 
-st.subheader("💼 HR Interview Questions")
+st.subheader(
+    "📊 Interview Progress"
+)
+
+
+
+st.progress(
+    interview_progress / 100
+)
+
+
+
+st.write(
+    f"Completed: **{answered_questions}/{total_questions} questions**"
+)
+
+
+st.write(
+    f"Progress: **{interview_progress}%**"
+)
+
+
+
+# HR Section
+
+st.divider()
+
+
+st.subheader(
+    "💼 HR Interview Questions"
+)
+
 
 
 hr_questions = [
@@ -263,11 +322,13 @@ for q in hr_questions:
 
 # Interview Tips
 
-
 st.divider()
 
 
-st.subheader("💡 Interview Tips")
+st.subheader(
+    "💡 Interview Tips"
+)
+
 
 
 tips = [
@@ -283,6 +344,7 @@ tips = [
 "Prepare your resume thoroughly."
 
 ]
+
 
 
 for tip in tips:

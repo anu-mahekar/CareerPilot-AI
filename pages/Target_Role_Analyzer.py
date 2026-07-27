@@ -61,7 +61,8 @@ if st.button("Analyze Role"):
     )
         # Save result for Career Report
     st.session_state["target_role_result"] = result
-
+    st.session_state["role_match_score"] = result["score"]
+    st.session_state["selected_role"] = target_role
 
     # ---------------- ROLE RESULT ----------------
 

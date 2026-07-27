@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.readiness import calculate_readiness
 
 
 # Page configuration
@@ -20,13 +21,12 @@ st.subheader(
 
 
 st.write(
-    """
+"""
 CareerPilot AI analyzes your resume, recommends career paths,
 identifies skill gaps, creates learning roadmaps, and prepares you
 for interviews.
 """
 )
-
 
 
 st.divider()
@@ -51,6 +51,7 @@ if "user_skills" in st.session_state:
 
     all_skills = []
 
+
     for category, skill_list in skills.items():
 
         for skill in skill_list:
@@ -72,6 +73,7 @@ if "user_skills" in st.session_state:
             "ats_score",
             80
         )
+
 
         st.metric(
             "📄 ATS Score",
@@ -103,20 +105,151 @@ if "user_skills" in st.session_state:
         )
 
 
-        progress = 0
+        completed_skills = 0
 
 
-        if roadmap:
+        for role, completed in roadmap.items():
 
-            for role, completed in roadmap.items():
-
-                progress = len(completed)
+            completed_skills += len(completed)
 
 
 
         st.metric(
             "🛣 Skills Completed",
-            progress
+            completed_skills
+        )
+
+
+
+    # ---------------- Career Readiness ----------------
+
+
+    st.divider()
+
+
+    st.subheader(
+        "🎯 Career Readiness Score"
+    )
+
+
+
+    # ATS Score
+
+    ats_score = st.session_state.get(
+        "ats_score",
+        80
+    )
+
+
+
+    # Role Match Score
+
+    role_match_score = st.session_state.get(
+        "role_match_score",
+        0
+    )
+
+
+
+    # Roadmap Progress
+
+    roadmap_percentage = st.session_state.get(
+        "roadmap_percentage",
+        0
+    )
+
+
+
+    # Interview Progress
+
+    interview_progress = st.session_state.get(
+        "interview_progress",
+        0
+    )
+
+
+
+    # Calculate Score
+
+    readiness_score = calculate_readiness(
+        ats_score,
+        role_match_score,
+        roadmap_percentage,
+        interview_progress
+    )
+
+
+
+    st.metric(
+        "🚀 Overall Career Readiness",
+        f"{readiness_score}%"
+    )
+
+
+
+    if readiness_score >= 80:
+
+        st.success(
+            "🔥 Excellent! Your profile is highly job-ready."
+        )
+
+
+    elif readiness_score >= 60:
+
+        st.info(
+            "🚀 Good progress! Continue improving your skills."
+        )
+
+
+    else:
+
+        st.warning(
+            "📚 Keep learning and building projects."
+        )
+
+
+
+    # ---------------- Readiness Breakdown ----------------
+
+
+    st.divider()
+
+
+    st.subheader(
+        "📊 Readiness Breakdown"
+    )
+
+
+    col1, col2 = st.columns(2)
+
+
+
+    with col1:
+
+        st.metric(
+            "📄 Resume Strength",
+            f"{ats_score}%"
+        )
+
+
+        st.metric(
+            "🎯 Role Match",
+            f"{role_match_score}%"
+        )
+
+
+
+    with col2:
+
+        st.metric(
+            "🛣 Roadmap Progress",
+            f"{roadmap_percentage}%"
+        )
+
+
+        st.metric(
+            "🎤 Interview Preparation",
+            f"{interview_progress}%"
         )
 
 
@@ -125,7 +258,7 @@ if "user_skills" in st.session_state:
 
 
 
-    # Skills Summary
+    # ---------------- Skills Summary ----------------
 
 
     st.subheader(
@@ -133,29 +266,27 @@ if "user_skills" in st.session_state:
     )
 
 
-    if all_skills:
+
+    st.write(
+        f"You have **{len(all_skills)} detected skills**"
+    )
+
+
+
+    for skill in all_skills[:15]:
 
         st.write(
-            f"You have **{len(all_skills)} detected skills**"
+            "✅",
+            skill.title()
         )
 
 
-        display_skills = all_skills[:15]
 
+    if len(all_skills) > 15:
 
-        for skill in display_skills:
-
-            st.write(
-                "✅",
-                skill.title()
-            )
-
-
-        if len(all_skills) > 15:
-
-            st.info(
-                f"+ {len(all_skills)-15} more skills"
-            )
+        st.info(
+            f"+ {len(all_skills)-15} more skills"
+        )
 
 
 
@@ -163,12 +294,13 @@ if "user_skills" in st.session_state:
 
 
 
-    # Quick Actions
+    # ---------------- Quick Actions ----------------
 
 
     st.subheader(
         "🚀 Continue Your Career Journey"
     )
+
 
 
     col1, col2, col3 = st.columns(3)
@@ -178,7 +310,7 @@ if "user_skills" in st.session_state:
     with col1:
 
         st.info(
-            """
+"""
 📚 Skill Gap Analysis
 
 Find missing skills and
@@ -191,7 +323,7 @@ improve your profile.
     with col2:
 
         st.info(
-            """
+"""
 🛣 Career Roadmap
 
 Track your learning
@@ -204,7 +336,7 @@ progress.
     with col3:
 
         st.info(
-            """
+"""
 🎤 Interview Prep
 
 Practice role-based
@@ -218,7 +350,7 @@ else:
 
 
     st.info(
-        """
+"""
 👋 Welcome to CareerPilot AI!
 
 Start your journey:
@@ -237,9 +369,12 @@ st.divider()
 
 
 
+# Features
+
 st.subheader(
     "✨ Platform Features"
 )
+
 
 
 features = [
@@ -259,6 +394,7 @@ features = [
 "📥 Career Report PDF"
 
 ]
+
 
 
 for feature in features:

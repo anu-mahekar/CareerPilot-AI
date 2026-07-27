@@ -290,6 +290,7 @@ st.write(
     f"Progress: **{int(progress*100)}%**"
 )
 
+st.session_state["roadmap_percentage"] = int(progress * 100)
 
 
 # Career Readiness
