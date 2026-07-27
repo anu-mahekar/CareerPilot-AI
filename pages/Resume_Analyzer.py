@@ -29,7 +29,7 @@ if uploaded_file:
     # ---------------- ATS SCORE ----------------
 
     ats_score = calculate_ats_score(resume_text)
-
+    st.session_state["ats_score"] = ats_score
 
     st.subheader("🎯 ATS Score")
 
@@ -86,7 +86,7 @@ if uploaded_file:
 
 
     career_results = recommend_careers(skills)
-
+    st.session_state["career_results"] = career_results
 
     st.subheader("🎯 Recommended Careers")
 

@@ -68,13 +68,18 @@ def extract_skills(resume_text):
         ],
 
 
-        "Engineering Tools": [
+        "Development & Engineering Tools": [
             "matlab",
             "autocad",
             "solidworks",
             "arduino",
             "esp32",
-            "iot"
+            "iot",
+            "jupyter notebook",
+            "google colab",
+            "anaconda",
+            "vscode",
+            "docker"
         ]
 
     }
