@@ -11,7 +11,8 @@ st.write(
 )
 
 
-# Check if resume skills exist
+
+# ---------------- CHECK RESUME SKILLS ----------------
 
 if "user_skills" not in st.session_state:
 
@@ -20,7 +21,8 @@ if "user_skills" not in st.session_state:
     )
 
     st.info(
-        "Go to Resume Analyzer → Upload PDF → Wait until skills are detected → Come back here."
+        "Go to Resume Analyzer → Upload PDF → "
+        "Wait until skills are detected → Come back here."
     )
 
     st.stop()
@@ -29,6 +31,9 @@ if "user_skills" not in st.session_state:
 
 skills = st.session_state["user_skills"]
 
+
+
+# ---------------- TARGET ROLE SELECTION ----------------
 
 
 target_role = st.selectbox(
@@ -44,6 +49,9 @@ target_role = st.selectbox(
 
 
 
+# ---------------- ANALYZE BUTTON ----------------
+
+
 if st.button("Analyze Role"):
 
 
@@ -51,6 +59,10 @@ if st.button("Analyze Role"):
         skills,
         target_role
     )
+
+
+
+    # ---------------- ROLE RESULT ----------------
 
 
     st.subheader("📊 Role Match Result")
@@ -71,34 +83,115 @@ if st.button("Analyze Role"):
     )
 
 
-    # Readiness message
 
-    if result["score"] >= 80:
+    # ---------------- PROFILE STRENGTH ----------------
+
+
+    if result["strength"] == "Excellent Match":
 
         st.success(
-            "Excellent match! You are highly prepared for this role."
+            f"🌟 Profile Strength: {result['strength']}"
         )
 
 
-    elif result["score"] >= 60:
+    elif result["strength"] == "Good Foundation":
 
         st.info(
-            "Good foundation! Improve the missing skills to become job-ready."
+            f"🌟 Profile Strength: {result['strength']}"
         )
 
 
     else:
 
         st.warning(
-            "You need to build more skills for this role."
+            f"🌟 Profile Strength: {result['strength']}"
         )
 
 
 
-    st.subheader("✅ Matching Skills")
+    # ---------------- CAREER SUMMARY ----------------
+
+
+    st.subheader(
+        "🚀 Career Recommendation Summary"
+    )
+
+
+    matched = ", ".join(
+        skill.title()
+        for skill in result["matched_skills"]
+    )
+
+
+    if result["score"] >= 80:
+
+
+        st.success(
+            f"""
+Your resume shows a strong alignment with the **{result['role']}** role.
+
+✅ Your current strengths:
+
+{matched}
+
+🎯 Focus Areas:
+
+- Improve missing technical skills
+- Build role-specific projects
+- Prepare interview concepts
+- Strengthen practical experience
+"""
+        )
+
+
+    elif result["score"] >= 60:
+
+
+        st.info(
+            f"""
+You have a good foundation for the **{result['role']}** role.
+
+✅ Current Strengths:
+
+{matched}
+
+Recommended Actions:
+
+- Complete missing skill areas
+- Create 2-3 projects
+- Practice real-world problems
+- Improve portfolio visibility
+"""
+        )
+
+
+    else:
+
+
+        st.warning(
+            f"""
+Your current profile needs improvement for the **{result['role']}** role.
+
+Start by:
+
+- Learning required technologies
+- Building beginner projects
+- Improving your resume with relevant skills
+"""
+        )
+
+
+
+    # ---------------- MATCHING SKILLS ----------------
+
+
+    st.subheader(
+        "✅ Your Strengths"
+    )
 
 
     if result["matched_skills"]:
+
 
         for skill in result["matched_skills"]:
 
@@ -106,6 +199,7 @@ if st.button("Analyze Role"):
                 "✅",
                 skill.title()
             )
+
 
     else:
 
@@ -115,20 +209,62 @@ if st.button("Analyze Role"):
 
 
 
-    st.subheader("❌ Skills To Improve")
+    # ---------------- ROADMAP ----------------
 
 
-    if result["missing_skills"]:
+    st.subheader(
+        "🛠️ Personalized Growth Roadmap"
+    )
 
-        for skill in result["missing_skills"]:
 
-            st.write(
-                "❌",
-                skill.title()
+
+    if result["learning_plan"]:
+
+
+        for item in result["learning_plan"]:
+
+
+            st.markdown(
+                f"""
+### ❌ {item['skill'].title()}
+
+**Why it matters:**  
+{item['why']}
+
+
+**Learning Topics:**
+"""
             )
+
+
+            for topic in item["learn"]:
+
+                st.write(
+                    "📘",
+                    topic
+                )
+
+
+            st.divider()
+
+
 
     else:
 
+
         st.success(
-            "You have all required skills!"
+            """
+🎉 You have all required skills!
+
+
+### Recommended Next Steps:
+
+🚀 Build 2-3 projects related to this role
+
+📚 Learn advanced concepts and best practices
+
+☁️ Explore deployment and cloud technologies
+
+💼 Practice role-specific interview questions
+"""
         )

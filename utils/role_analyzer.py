@@ -1,99 +1,100 @@
-def analyze_role_match(user_skills, target_role):
-
-    roles = {
-
-        "AI Engineer": [
-            "python",
-            "machine learning",
-            "deep learning",
-            "tensorflow",
-            "pytorch",
-            "nlp",
-            "computer vision",
-            "generative ai"
-        ],
+from utils.career import recommend_careers
+from utils.skill_gap import calculate_skill_gap
 
 
-        "Machine Learning Engineer": [
-            "python",
-            "machine learning",
-            "scikit-learn",
-            "tensorflow",
-            "pytorch",
-            "deep learning"
-        ],
+def analyze_role_match(skill_categories, target_role):
+
+    # Get career scores
+    careers = recommend_careers(skill_categories)
 
 
-        "Data Scientist": [
-            "python",
-            "machine learning",
-            "statistics",
-            "deep learning",
-            "sql",
-            "nlp"
-        ],
+    for career in careers:
+
+        if career["career"] == target_role:
 
 
-        "Data Analyst": [
-            "sql",
-            "excel",
-            "power bi",
-            "tableau",
-            "python",
-            "pandas",
-            "statistics"
-        ],
+            # Calculate missing skills
+            missing_skills = calculate_skill_gap(
+                skill_categories,
+                target_role
+            )
 
 
-        "Full Stack Developer": [
-            "html",
-            "css",
-            "javascript",
-            "react",
-            "node.js",
-            "sql"
-        ]
-
-    }
+            # Determine profile strength
+            score = career["score"]
 
 
-    required_skills = roles.get(
-        target_role,
-        []
-    )
+            if score >= 80:
+                strength = "Excellent Match"
+
+            elif score >= 60:
+                strength = "Good Foundation"
+
+            else:
+                strength = "Needs Improvement"
 
 
-    # Convert categorized skills dictionary into a list
 
-    all_skills = []
+            # Extract missing skill names
+            missing = []
 
-    for category, skills in user_skills.items():
-        all_skills.extend(skills)
-
-
-    user_skills = set(all_skills)
-
-    required_skills = set(required_skills)
+            learning = []
 
 
-    matched_skills = user_skills.intersection(
-        required_skills
-    )
+            for skill in missing_skills:
+
+                missing.append(
+                    skill["name"]
+                )
 
 
-    missing_skills = required_skills.difference(
-        user_skills
-    )
+                learning.append(
+                    {
+                        "skill": skill["name"],
+                        "why": skill["why"],
+                        "learn": skill["learn"]
+                    }
+                )
 
 
-    score = int(
-        (len(matched_skills) / len(required_skills)) * 100
-    )
 
+            return {
+
+                "role": target_role,
+
+                "score": score,
+
+                "strength": strength,
+
+
+                "matched_skills": career[
+                    "matched_skills"
+                ],
+
+
+                "missing_skills": missing,
+
+
+                "learning_plan": learning
+
+            }
+
+
+
+    # If role not found
 
     return {
+
         "role": target_role,
-        "score": score,
-        "matched_skills": list(matched_skills),
-        "missing_skills": list(missing_skills)
+
+        "score": 0,
+
+        "strength": "No Match Found",
+
+        "matched_skills": [],
+
+        "missing_skills": [],
+
+        "learning_plan": []
+
     }
