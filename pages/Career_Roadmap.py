@@ -3,7 +3,6 @@ import streamlit as st
 
 st.title("🛣 Career Roadmap")
 
-
 st.write(
     "Get a personalized learning roadmap and track your progress."
 )
@@ -25,7 +24,15 @@ if "user_skills" not in st.session_state:
 
 
 
-# Select Role
+resume_skills = [
+    skill.lower()
+    for category in st.session_state["user_skills"].values()
+    for skill in category
+]
+
+
+
+# Role Selection
 
 target_role = st.selectbox(
     "🎯 Select your career goal",
@@ -45,91 +52,136 @@ target_role = st.selectbox(
 roadmaps = {
 
 
-"AI Engineer": [
+"AI Engineer": {
 
+"Beginner": [
 "Python Advanced",
 "Statistics for AI",
-"Machine Learning Basics",
+"Machine Learning Basics"
+],
+
+"Intermediate": [
 "Deep Learning",
 "TensorFlow",
 "PyTorch",
 "NLP",
-"Computer Vision",
-"MLOps",
-"Model Deployment"
-
+"Computer Vision"
 ],
 
+"Advanced": [
+"MLOps",
+"Model Deployment",
+"Cloud AI Services"
+]
+
+},
 
 
-"Machine Learning Engineer": [
 
+"Machine Learning Engineer": {
+
+"Beginner": [
 "Python",
 "Machine Learning",
-"Scikit-Learn",
+"Scikit-Learn"
+],
+
+"Intermediate": [
 "Feature Engineering",
 "Model Evaluation",
 "Deep Learning",
-"TensorFlow",
-"PyTorch",
-"MLOps"
-
+"TensorFlow"
 ],
 
+"Advanced": [
+"PyTorch",
+"MLOps",
+"Model Deployment"
+]
+
+},
 
 
-"Data Scientist": [
 
+"Data Scientist": {
+
+"Beginner": [
 "Python",
 "SQL",
-"Statistics",
+"Statistics"
+],
+
+"Intermediate": [
 "Pandas",
 "Machine Learning",
-"Data Visualization",
-"Deep Learning",
-"Experiment Design"
-
+"Data Visualization"
 ],
 
+"Advanced": [
+"Deep Learning",
+"Experiment Design",
+"Model Deployment"
+]
+
+},
 
 
-"Data Analyst": [
 
+"Data Analyst": {
+
+"Beginner": [
 "Excel",
 "SQL",
-"Python",
-"Pandas",
-"Power BI",
-"Tableau",
-"Statistics",
-"Business Analytics"
-
+"Python"
 ],
 
+"Intermediate": [
+"Pandas",
+"Power BI",
+"Tableau"
+],
+
+"Advanced": [
+"Statistics",
+"Business Analytics",
+"Data Storytelling"
+]
+
+},
 
 
-"Full Stack Developer": [
 
+"Full Stack Developer": {
+
+"Beginner": [
 "HTML",
 "CSS",
-"JavaScript",
+"JavaScript"
+],
+
+"Intermediate": [
 "React",
 "REST APIs",
-"Node.js",
-"Database Design",
-"Cloud Deployment"
+"Node.js"
+],
 
+"Advanced": [
+"Database Design",
+"Cloud Deployment",
+"System Design"
 ]
+
+}
 
 }
 
 
 
-skills = roadmaps[target_role]
+selected_roadmap = roadmaps[target_role]
 
 
 
-# Store Progress
+# Progress Storage
 
 if "roadmap_progress" not in st.session_state:
 
@@ -147,6 +199,20 @@ completed = st.session_state["roadmap_progress"][target_role]
 
 
 
+# Auto detect resume skills
+
+for level, skills in selected_roadmap.items():
+
+    for skill in skills:
+
+        if skill.lower() in resume_skills:
+
+            if skill not in completed:
+
+                completed.append(skill)
+
+
+
 st.divider()
 
 
@@ -156,36 +222,49 @@ st.subheader(
 
 
 
-# Skill checklist
+all_skills = []
 
-for skill in skills:
 
-    checked = st.checkbox(
-        skill,
-        value=skill in completed
+
+# Display roadmap
+
+for level, skills in selected_roadmap.items():
+
+    st.subheader(
+        f"📚 {level}"
     )
 
 
-    if checked:
+    for skill in skills:
 
-        if skill not in completed:
-
-            completed.append(skill)
+        all_skills.append(skill)
 
 
-    else:
+        checked = st.checkbox(
+            skill,
+            value=skill in completed,
+            key=f"{target_role}_{skill}"
+        )
 
-        if skill in completed:
 
-            completed.remove(skill)
+        if checked:
+
+            if skill not in completed:
+                completed.append(skill)
+
+        else:
+
+            if skill in completed:
+                completed.remove(skill)
 
 
 
-# Calculate Progress
+# Progress Calculation
+
 
 completed_count = len(completed)
 
-total_skills = len(skills)
+total_skills = len(all_skills)
 
 
 progress = completed_count / total_skills
@@ -201,8 +280,9 @@ st.subheader("📊 Your Progress")
 st.progress(progress)
 
 
+
 st.write(
-    f"Completed: **{completed_count}/{total_skills} skills**"
+    f"Completed Skills: **{completed_count}/{total_skills}**"
 )
 
 
@@ -212,39 +292,50 @@ st.write(
 
 
 
-# Status Message
+# Career Readiness
+
 
 if progress == 1:
 
     st.success(
-        "🎉 Congratulations! You completed your career roadmap."
+        "🎉 You are fully prepared for this career path!"
     )
 
 
-elif progress >= 0.5:
+elif progress >= 0.7:
+
+    st.success(
+        "🔥 Excellent progress! Start building advanced projects."
+    )
+
+
+elif progress >= 0.4:
 
     st.info(
-        "🔥 Great progress! Keep building your skills."
+        "🚀 Good foundation. Continue improving your skills."
     )
 
 
 else:
 
     st.warning(
-        "🚀 Start completing skills to become job-ready."
+        "📚 Start learning the fundamentals first."
     )
 
+
+
+# Projects
 
 
 st.divider()
 
 
-# Project Ideas
-
 st.subheader("💡 Recommended Projects")
 
 
+
 projects = {
+
 
 "AI Engineer": [
 "AI Chatbot using NLP",
@@ -252,11 +343,13 @@ projects = {
 "Recommendation System"
 ],
 
+
 "Machine Learning Engineer": [
 "House Price Prediction",
 "Fraud Detection System",
 "Customer Churn Prediction"
 ],
+
 
 "Data Scientist": [
 "Sales Forecasting",
@@ -264,11 +357,13 @@ projects = {
 "Customer Segmentation"
 ],
 
+
 "Data Analyst": [
 "Sales Dashboard",
 "Business Analytics Report",
 "Customer Analysis"
 ],
+
 
 "Full Stack Developer": [
 "E-Commerce Website",
