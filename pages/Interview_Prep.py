@@ -1,8 +1,8 @@
 import streamlit as st
+from utils.interview_ai import evaluate_answer
 
 
 st.title("🎤 Interview Preparation")
-
 
 st.write(
     "Prepare for interviews with role-based technical and HR questions."
@@ -199,7 +199,6 @@ selected_questions = questions[target_role][difficulty]
 
 st.divider()
 
-
 st.subheader(
     f"🔥 {difficulty} Questions for {target_role}"
 )
@@ -231,6 +230,26 @@ for index, question in enumerate(
         answered_questions += 1
 
 
+        if st.button(
+            f"Evaluate Answer {index}",
+            key=f"evaluate_{target_role}_{difficulty}_{index}"
+        ):
+
+            result = evaluate_answer(
+                question,
+                answer
+            )
+
+
+            st.success(
+                f"📊 Answer Score: {result['score']}/10"
+            )
+
+
+            st.info(
+                f"💡 Feedback: {result['feedback']}"
+            )
+
 
 
 # ---------------- Interview Progress ----------------
@@ -260,7 +279,6 @@ st.session_state["interview_progress"] = interview_progress
 
 st.divider()
 
-
 st.subheader(
     "📊 Interview Progress"
 )
@@ -287,7 +305,6 @@ st.write(
 # HR Section
 
 st.divider()
-
 
 st.subheader(
     "💼 HR Interview Questions"
@@ -323,7 +340,6 @@ for q in hr_questions:
 # Interview Tips
 
 st.divider()
-
 
 st.subheader(
     "💡 Interview Tips"
