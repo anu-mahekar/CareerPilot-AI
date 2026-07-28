@@ -1,8 +1,9 @@
 from utils.career import recommend_careers
 from utils.skill_gap import calculate_skill_gap
+from database.db_operations import save_role_match
 
 
-def analyze_role_match(skill_categories, target_role):
+def analyze_role_match(skill_categories, target_role, user_id=None):
 
     # Get career scores
     careers = recommend_careers(skill_categories)
@@ -20,10 +21,11 @@ def analyze_role_match(skill_categories, target_role):
             )
 
 
-            # Determine profile strength
+            # Role score
             score = career["score"]
 
 
+            # Determine profile strength
             if score >= 80:
                 strength = "Excellent Match"
 
@@ -35,9 +37,7 @@ def analyze_role_match(skill_categories, target_role):
 
 
 
-            # Extract missing skill names
             missing = []
-
             learning = []
 
 
@@ -57,6 +57,15 @@ def analyze_role_match(skill_categories, target_role):
                 )
 
 
+            # Save role score in database
+            if user_id:
+
+                save_role_match(
+                    user_id,
+                    target_role,
+                    score
+                )
+
 
             return {
 
@@ -66,14 +75,9 @@ def analyze_role_match(skill_categories, target_role):
 
                 "strength": strength,
 
-
-                "matched_skills": career[
-                    "matched_skills"
-                ],
-
+                "matched_skills": career["matched_skills"],
 
                 "missing_skills": missing,
-
 
                 "learning_plan": learning
 
@@ -81,7 +85,7 @@ def analyze_role_match(skill_categories, target_role):
 
 
 
-    # If role not found
+    # Role not found
 
     return {
 

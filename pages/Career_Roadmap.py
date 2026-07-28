@@ -1,4 +1,10 @@
 import streamlit as st
+import os
+
+from database.db_operations import (
+    save_roadmap_progress,
+    get_roadmap_progress
+)
 
 
 st.title("🛣 Career Roadmap")
@@ -8,7 +14,22 @@ st.write(
 )
 
 
-# Check resume upload
+# ---------------- LOAD USER ----------------
+
+if "user_id" not in st.session_state:
+
+    if os.path.exists("database/current_user.txt"):
+
+        with open("database/current_user.txt","r") as f:
+
+            user_id = f.read().strip()
+
+            if user_id:
+                st.session_state["user_id"] = int(user_id)
+
+
+
+# ---------------- CHECK RESUME ----------------
 
 if "user_skills" not in st.session_state:
 
@@ -24,54 +45,97 @@ if "user_skills" not in st.session_state:
 
 
 
+if "user_id" not in st.session_state:
+
+    st.warning(
+        "User information not found. Upload resume again."
+    )
+
+    st.stop()
+
+
+
+user_id = st.session_state["user_id"]
+
+
+
+# ---------------- RESUME SKILLS ----------------
+
 resume_skills = [
+
     skill.lower()
-    for category in st.session_state["user_skills"].values()
-    for skill in category
+
+    for category, skills in st.session_state["user_skills"].items()
+
+    for skill in skills
+
 ]
 
 
 
-# Role Selection
+# ---------------- ROLE SELECTION ----------------
 
 target_role = st.selectbox(
+
     "🎯 Select your career goal",
+
     [
+
         "AI Engineer",
+
         "Machine Learning Engineer",
+
         "Data Scientist",
+
         "Data Analyst",
+
         "Full Stack Developer"
+
     ]
+
 )
 
 
 
-# Roadmap Data
+# ---------------- ROADMAP DATABASE ----------------
 
 roadmaps = {
 
 
 "AI Engineer": {
 
-"Beginner": [
+"Beginner":[
+
 "Python Advanced",
+
 "Statistics for AI",
+
 "Machine Learning Basics"
+
 ],
 
-"Intermediate": [
+"Intermediate":[
+
 "Deep Learning",
+
 "TensorFlow",
+
 "PyTorch",
+
 "NLP",
+
 "Computer Vision"
+
 ],
 
-"Advanced": [
+"Advanced":[
+
 "MLOps",
+
 "Model Deployment",
+
 "Cloud AI Services"
+
 ]
 
 },
@@ -80,23 +144,36 @@ roadmaps = {
 
 "Machine Learning Engineer": {
 
-"Beginner": [
+"Beginner":[
+
 "Python",
+
 "Machine Learning",
+
 "Scikit-Learn"
+
 ],
 
-"Intermediate": [
+"Intermediate":[
+
 "Feature Engineering",
+
 "Model Evaluation",
+
 "Deep Learning",
+
 "TensorFlow"
+
 ],
 
-"Advanced": [
+"Advanced":[
+
 "PyTorch",
+
 "MLOps",
+
 "Model Deployment"
+
 ]
 
 },
@@ -105,22 +182,34 @@ roadmaps = {
 
 "Data Scientist": {
 
-"Beginner": [
+"Beginner":[
+
 "Python",
+
 "SQL",
+
 "Statistics"
+
 ],
 
-"Intermediate": [
+"Intermediate":[
+
 "Pandas",
+
 "Machine Learning",
+
 "Data Visualization"
+
 ],
 
-"Advanced": [
+"Advanced":[
+
 "Deep Learning",
+
 "Experiment Design",
+
 "Model Deployment"
+
 ]
 
 },
@@ -129,22 +218,34 @@ roadmaps = {
 
 "Data Analyst": {
 
-"Beginner": [
+"Beginner":[
+
 "Excel",
+
 "SQL",
+
 "Python"
+
 ],
 
-"Intermediate": [
+"Intermediate":[
+
 "Pandas",
+
 "Power BI",
+
 "Tableau"
+
 ],
 
-"Advanced": [
+"Advanced":[
+
 "Statistics",
+
 "Business Analytics",
+
 "Data Storytelling"
+
 ]
 
 },
@@ -153,22 +254,34 @@ roadmaps = {
 
 "Full Stack Developer": {
 
-"Beginner": [
+"Beginner":[
+
 "HTML",
+
 "CSS",
+
 "JavaScript"
+
 ],
 
-"Intermediate": [
+"Intermediate":[
+
 "React",
+
 "REST APIs",
+
 "Node.js"
+
 ],
 
-"Advanced": [
+"Advanced":[
+
 "Database Design",
+
 "Cloud Deployment",
+
 "System Design"
+
 ]
 
 }
@@ -181,43 +294,58 @@ selected_roadmap = roadmaps[target_role]
 
 
 
-# Progress Storage
+# ---------------- LOAD COMPLETED SKILLS ----------------
 
-if "roadmap_progress" not in st.session_state:
+completed = get_roadmap_progress(
 
-    st.session_state["roadmap_progress"] = {}
+    user_id,
 
+    target_role
 
-
-if target_role not in st.session_state["roadmap_progress"]:
-
-    st.session_state["roadmap_progress"][target_role] = []
+)
 
 
 
-completed = st.session_state["roadmap_progress"][target_role]
+if completed is None:
+
+    completed = []
 
 
 
-# Auto detect resume skills
+# ---------------- AUTO DETECT SKILLS ----------------
 
 for level, skills in selected_roadmap.items():
 
+
     for skill in skills:
 
+
         if skill.lower() in resume_skills:
+
 
             if skill not in completed:
 
                 completed.append(skill)
 
+                save_roadmap_progress(
+
+                    user_id,
+
+                    target_role,
+
+                    skill
+
+                )
+
+
+
+# ---------------- ROADMAP DISPLAY ----------------
 
 
 st.divider()
 
-
 st.subheader(
-    f"🚀 {target_role} Roadmap"
+    f"🚀 {target_role} Learning Path"
 )
 
 
@@ -226,40 +354,63 @@ all_skills = []
 
 
 
-# Display roadmap
-
 for level, skills in selected_roadmap.items():
 
-    st.subheader(
-        f"📚 {level}"
-    )
+
+    with st.expander(
+        f"📚 {level}",
+        expanded=True
+    ):
 
 
-    for skill in skills:
-
-        all_skills.append(skill)
+        for skill in skills:
 
 
-        checked = st.checkbox(
-            skill,
-            value=skill in completed,
-            key=f"{target_role}_{skill}"
-        )
+            all_skills.append(skill)
 
 
-        if checked:
+            checked = st.checkbox(
 
-            if skill not in completed:
-                completed.append(skill)
+                skill,
 
-        else:
+                value=skill in completed,
 
-            if skill in completed:
-                completed.remove(skill)
+                key=f"{target_role}_{skill}"
+
+            )
 
 
 
-# Progress Calculation
+            if checked:
+
+
+                if skill not in completed:
+
+
+                    completed.append(skill)
+
+
+                    save_roadmap_progress(
+
+                        user_id,
+
+                        target_role,
+
+                        skill
+
+                    )
+
+
+            else:
+
+
+                if skill in completed:
+
+                    completed.remove(skill)
+
+
+
+# ---------------- PROGRESS ----------------
 
 
 completed_count = len(completed)
@@ -267,50 +418,79 @@ completed_count = len(completed)
 total_skills = len(all_skills)
 
 
-progress = completed_count / total_skills
+
+if total_skills:
+
+    progress = completed_count / total_skills
+
+else:
+
+    progress = 0
+
+
+
+percentage = int(progress * 100)
 
 
 
 st.divider()
 
 
-st.subheader("📊 Your Progress")
+st.subheader(
+    "📊 Learning Progress"
+)
 
 
 st.progress(progress)
 
 
 
-st.write(
-    f"Completed Skills: **{completed_count}/{total_skills}**"
+st.metric(
+
+    "Skills Completed",
+
+    f"{completed_count}/{total_skills}"
+
 )
 
 
-st.write(
-    f"Progress: **{int(progress*100)}%**"
+st.metric(
+
+    "Roadmap Completion",
+
+    f"{percentage}%"
+
 )
 
-st.session_state["roadmap_percentage"] = int(progress * 100)
 
 
-# Career Readiness
+# Save for dashboard
+
+st.session_state["roadmap_percentage"] = percentage
 
 
-if progress == 1:
+
+# ---------------- STATUS ----------------
+
+
+if percentage == 100:
+
 
     st.success(
         "🎉 You are fully prepared for this career path!"
     )
 
 
-elif progress >= 0.7:
+elif percentage >= 70:
+
 
     st.success(
         "🔥 Excellent progress! Start building advanced projects."
     )
 
 
-elif progress >= 0.4:
+elif percentage >= 40:
+
 
     st.info(
         "🚀 Good foundation. Continue improving your skills."
@@ -319,58 +499,82 @@ elif progress >= 0.4:
 
 else:
 
+
     st.warning(
         "📚 Start learning the fundamentals first."
     )
 
 
 
-# Projects
+# ---------------- PROJECTS ----------------
 
 
 st.divider()
 
 
-st.subheader("💡 Recommended Projects")
+st.subheader(
+    "💡 Recommended Projects"
+)
 
 
 
 projects = {
 
 
-"AI Engineer": [
+"AI Engineer":[
+
 "AI Chatbot using NLP",
+
 "Image Classification System",
+
 "Recommendation System"
+
 ],
 
 
-"Machine Learning Engineer": [
+"Machine Learning Engineer":[
+
 "House Price Prediction",
+
 "Fraud Detection System",
+
 "Customer Churn Prediction"
+
 ],
 
 
-"Data Scientist": [
+"Data Scientist":[
+
 "Sales Forecasting",
+
 "Sentiment Analysis",
+
 "Customer Segmentation"
+
 ],
 
 
-"Data Analyst": [
+"Data Analyst":[
+
 "Sales Dashboard",
+
 "Business Analytics Report",
+
 "Customer Analysis"
+
 ],
 
 
-"Full Stack Developer": [
+"Full Stack Developer":[
+
 "E-Commerce Website",
+
 "Portfolio Website",
+
 "Blog Application"
+
 ]
+
 
 }
 
@@ -378,7 +582,11 @@ projects = {
 
 for project in projects[target_role]:
 
+
     st.write(
+
         "🚀",
+
         project
+
     )

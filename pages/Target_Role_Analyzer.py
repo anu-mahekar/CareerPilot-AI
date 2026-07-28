@@ -1,18 +1,33 @@
 import streamlit as st
+import os
 
 from utils.role_analyzer import analyze_role_match
+from database.db_operations import save_role_match
 
 
 st.title("🎯 Target Role Analyzer")
-
 
 st.write(
     "Analyze your resume skills against your desired career role."
 )
 
 
+# ---------------- LOAD USER ----------------
 
-# ---------------- CHECK RESUME SKILLS ----------------
+if "user_id" not in st.session_state:
+
+    if os.path.exists("database/current_user.txt"):
+
+        with open("database/current_user.txt", "r") as f:
+
+            user_id = f.read().strip()
+
+            if user_id:
+                st.session_state["user_id"] = int(user_id)
+
+
+
+# ---------------- CHECK RESUME ----------------
 
 if "user_skills" not in st.session_state:
 
@@ -21,8 +36,7 @@ if "user_skills" not in st.session_state:
     )
 
     st.info(
-        "Go to Resume Analyzer → Upload PDF → "
-        "Wait until skills are detected → Come back here."
+        "Go to Resume Analyzer → Upload PDF → Come back here."
     )
 
     st.stop()
@@ -33,8 +47,23 @@ skills = st.session_state["user_skills"]
 
 
 
-# ---------------- TARGET ROLE SELECTION ----------------
+# ---------------- CHECK USER ----------------
 
+if "user_id" not in st.session_state:
+
+    st.warning(
+        "User information not found. Please upload resume again."
+    )
+
+    st.stop()
+
+
+
+user_id = st.session_state["user_id"]
+
+
+
+# ---------------- ROLE SELECTION ----------------
 
 target_role = st.selectbox(
     "Select your target role",
@@ -49,25 +78,46 @@ target_role = st.selectbox(
 
 
 
-# ---------------- ANALYZE BUTTON ----------------
+# ---------------- ANALYZE ROLE ----------------
 
-
-if st.button("Analyze Role"):
+if st.button("🚀 Analyze Role"):
 
 
     result = analyze_role_match(
         skills,
         target_role
     )
-        # Save result for Career Report
+
+
+    # Save session values
+
     st.session_state["target_role_result"] = result
-    st.session_state["role_match_score"] = result["score"]
+
     st.session_state["selected_role"] = target_role
 
-    # ---------------- ROLE RESULT ----------------
+    st.session_state["role_match_score"] = result["score"]
 
 
-    st.subheader("📊 Role Match Result")
+
+    # Save role score in database
+
+    save_role_match(
+        user_id,
+        target_role,
+        result["score"]
+    )
+
+
+
+    st.divider()
+
+
+
+    # ---------------- RESULT ----------------
+
+    st.subheader(
+        "📊 Role Match Result"
+    )
 
 
     st.write(
@@ -89,97 +139,24 @@ if st.button("Analyze Role"):
     # ---------------- PROFILE STRENGTH ----------------
 
 
-    if result["strength"] == "Excellent Match":
-
-        st.success(
-            f"🌟 Profile Strength: {result['strength']}"
-        )
-
-
-    elif result["strength"] == "Good Foundation":
-
-        st.info(
-            f"🌟 Profile Strength: {result['strength']}"
-        )
-
-
-    else:
-
-        st.warning(
-            f"🌟 Profile Strength: {result['strength']}"
-        )
-
-
-
-    # ---------------- CAREER SUMMARY ----------------
-
-
-    st.subheader(
-        "🚀 Career Recommendation Summary"
-    )
-
-
-    matched = ", ".join(
-        skill.title()
-        for skill in result["matched_skills"]
-    )
-
-
     if result["score"] >= 80:
 
-
         st.success(
-            f"""
-Your resume shows a strong alignment with the **{result['role']}** role.
-
-✅ Your current strengths:
-
-{matched}
-
-🎯 Focus Areas:
-
-- Improve missing technical skills
-- Build role-specific projects
-- Prepare interview concepts
-- Strengthen practical experience
-"""
+            "🌟 Profile Strength: Excellent Match"
         )
 
 
     elif result["score"] >= 60:
 
-
         st.info(
-            f"""
-You have a good foundation for the **{result['role']}** role.
-
-✅ Current Strengths:
-
-{matched}
-
-Recommended Actions:
-
-- Complete missing skill areas
-- Create 2-3 projects
-- Practice real-world problems
-- Improve portfolio visibility
-"""
+            "🌟 Profile Strength: Good Foundation"
         )
 
 
     else:
 
-
         st.warning(
-            f"""
-Your current profile needs improvement for the **{result['role']}** role.
-
-Start by:
-
-- Learning required technologies
-- Building beginner projects
-- Improving your resume with relevant skills
-"""
+            "🌟 Profile Strength: Needs Improvement"
         )
 
 
@@ -188,7 +165,7 @@ Start by:
 
 
     st.subheader(
-        "✅ Your Strengths"
+        "✅ Matching Skills"
     )
 
 
@@ -211,13 +188,12 @@ Start by:
 
 
 
-    # ---------------- ROADMAP ----------------
+    # ---------------- LEARNING PLAN ----------------
 
 
     st.subheader(
-        "🛠️ Personalized Growth Roadmap"
+        "🛠 Personalized Growth Roadmap"
     )
-
 
 
     if result["learning_plan"]:
@@ -230,9 +206,9 @@ Start by:
                 f"""
 ### ❌ {item['skill'].title()}
 
-**Why it matters:**  
-{item['why']}
+**Why it matters:**
 
+{item['why']}
 
 **Learning Topics:**
 """
@@ -256,17 +232,12 @@ Start by:
 
         st.success(
             """
-🎉 You have all required skills!
+🎉 You already have the required skills!
 
+Recommended next steps:
 
-### Recommended Next Steps:
-
-🚀 Build 2-3 projects related to this role
-
-📚 Learn advanced concepts and best practices
-
-☁️ Explore deployment and cloud technologies
-
-💼 Practice role-specific interview questions
+🚀 Build projects  
+📚 Learn advanced concepts  
+💼 Practice interviews
 """
         )

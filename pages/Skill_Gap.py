@@ -1,6 +1,7 @@
 import streamlit as st
 
 from utils.skill_gap import calculate_skill_gap
+from database.db_operations import get_user_skills
 
 
 st.title("🎯 Skill Gap Analysis")
@@ -11,22 +12,35 @@ st.write(
 )
 
 
+
 # Check if resume skills exist
-if "user_skills" not in st.session_state:
 
-    st.warning(
-        "Please upload your resume in Resume Analyzer first."
-    )
+if "user_skills" in st.session_state:
 
-    st.info(
-        "Go to Resume Analyzer → Upload PDF → Come back here."
-    )
-
-    st.stop()
+    skills = st.session_state["user_skills"]
 
 
+else:
 
-skills = st.session_state["user_skills"]
+    # Fetch skills from database
+
+    if "user_id" in st.session_state:
+
+        skills = get_user_skills(
+            st.session_state["user_id"]
+        )
+
+    else:
+
+        st.warning(
+            "Please upload your resume in Resume Analyzer first."
+        )
+
+        st.info(
+            "Go to Resume Analyzer → Upload PDF → Come back here."
+        )
+
+        st.stop()
 
 
 
@@ -55,9 +69,11 @@ if st.button("Analyze Skill Gap"):
     )
 
 
+
     st.subheader(
         f"📊 Target Role: {selected_role}"
     )
+
 
 
     if missing_skills:
@@ -66,6 +82,7 @@ if st.button("Analyze Skill Gap"):
         st.write(
             "### ❌ Skills To Improve"
         )
+
 
 
         for skill in missing_skills:
@@ -87,6 +104,7 @@ if st.button("Analyze Skill Gap"):
             )
 
 
+
             for topic in skill["learn"]:
 
                 st.write(
@@ -96,6 +114,7 @@ if st.button("Analyze Skill Gap"):
 
 
             st.divider()
+
 
 
     else:
