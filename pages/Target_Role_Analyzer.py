@@ -42,7 +42,6 @@ if "user_skills" not in st.session_state:
     st.stop()
 
 
-
 skills = st.session_state["user_skills"]
 
 
@@ -56,7 +55,6 @@ if "user_id" not in st.session_state:
     )
 
     st.stop()
-
 
 
 user_id = st.session_state["user_id"]
@@ -78,7 +76,14 @@ target_role = st.selectbox(
 
 
 
-# ---------------- ANALYZE ROLE ----------------
+# ---------------- STORE RESULT ----------------
+
+if "target_role_result" not in st.session_state:
+    st.session_state["target_role_result"] = None
+
+
+
+# ---------------- ANALYZE BUTTON ----------------
 
 if st.button("🚀 Analyze Role"):
 
@@ -89,8 +94,6 @@ if st.button("🚀 Analyze Role"):
     )
 
 
-    # Save session values
-
     st.session_state["target_role_result"] = result
 
     st.session_state["selected_role"] = target_role
@@ -98,8 +101,6 @@ if st.button("🚀 Analyze Role"):
     st.session_state["role_match_score"] = result["score"]
 
 
-
-    # Save role score in database
 
     save_role_match(
         user_id,
@@ -109,11 +110,16 @@ if st.button("🚀 Analyze Role"):
 
 
 
+# ---------------- DISPLAY RESULT ----------------
+
+if st.session_state["target_role_result"]:
+
+
+    result = st.session_state["target_role_result"]
+
+
     st.divider()
 
-
-
-    # ---------------- RESULT ----------------
 
     st.subheader(
         "📊 Role Match Result"
@@ -136,8 +142,7 @@ if st.button("🚀 Analyze Role"):
 
 
 
-    # ---------------- PROFILE STRENGTH ----------------
-
+    # PROFILE STRENGTH
 
     if result["score"] >= 80:
 
@@ -161,8 +166,7 @@ if st.button("🚀 Analyze Role"):
 
 
 
-    # ---------------- MATCHING SKILLS ----------------
-
+    # MATCHING SKILLS
 
     st.subheader(
         "✅ Matching Skills"
@@ -188,8 +192,7 @@ if st.button("🚀 Analyze Role"):
 
 
 
-    # ---------------- LEARNING PLAN ----------------
-
+    # LEARNING ROADMAP
 
     st.subheader(
         "🛠 Personalized Growth Roadmap"
