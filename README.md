@@ -13,7 +13,7 @@ The platform combines **Resume Analysis, Machine Learning, Natural Language Proc
 Try CareerPilot-AI here:
 
 🔗 **Streamlit Demo:**
-(Add your Streamlit Cloud URL here)
+(https://careerpilot-ai-vpwaevfalzn4hflw2n26zj.streamlit.app/)
 
 ---
 
@@ -22,7 +22,7 @@ Try CareerPilot-AI here:
 Watch the complete project demonstration:
 
 🔗 **Demo Video:**
-(Add your Google Drive video link here)
+(https://drive.google.com/file/d/1hJg4ocHXqZRJ7pdThWVdYh0WznGTQgTs/view?usp=sharing)
 
 ---
 
