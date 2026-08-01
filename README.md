@@ -1,10 +1,28 @@
 # 🚀 CareerPilot-AI
 
-## Your Personal AI Career Mentor
+## Your Personal AI Career Mentor 🤖
 
-CareerPilot-AI is an AI-powered career guidance platform that helps students and job seekers analyze their resumes, identify skill gaps, discover suitable career paths, prepare for interviews, and generate personalized career reports.
+CareerPilot-AI is an AI-powered career guidance platform designed to help students and job seekers analyze their resumes, identify skill gaps, discover suitable career paths, prepare for interviews, and generate personalized career reports.
 
-The system combines Resume Analysis, Machine Learning, Natural Language Processing, and AI-based recommendations to provide an end-to-end career preparation experience.
+The platform combines **Resume Analysis, Machine Learning, Natural Language Processing, and AI-based recommendations** to provide an end-to-end career preparation experience.
+
+---
+
+# 🌐 Live Demo
+
+Try CareerPilot-AI here:
+
+🔗 **Streamlit Demo:**
+(Add your Streamlit Cloud URL here)
+
+---
+
+# 🎥 Demo Video
+
+Watch the complete project demonstration:
+
+🔗 **Demo Video:**
+(Add your Google Drive video link here)
 
 ---
 
@@ -12,27 +30,31 @@ The system combines Resume Analysis, Machine Learning, Natural Language Processi
 
 ## 📄 Resume Analyzer
 
-- Upload resume in PDF format
-- Extract resume text automatically
-- Calculate ATS compatibility score
-- Extract technical skills
-- Analyze resume strengths
+* Upload resume in PDF format
+* Extract resume content automatically
+* Calculate ATS compatibility score
+* Extract technical skills using NLP techniques
+* Analyze resume strengths
 
 ---
 
-## 🎯 Career Recommendation
+## 🎯 Career Recommendation System
 
-- Suggests suitable career roles based on skills
-- Provides role match percentage
-- Identifies best-fit career paths
+Suggests suitable career paths based on extracted resume skills.
 
 Supported roles:
 
-- AI Engineer
-- Machine Learning Engineer
-- Data Scientist
-- Data Analyst
-- Full Stack Developer
+* AI Engineer
+* Machine Learning Engineer
+* Data Scientist
+* Data Analyst
+* Full Stack Developer
+
+Provides:
+
+* Career match percentage
+* Matched skills
+* Recommended career direction
 
 ---
 
@@ -42,10 +64,10 @@ Analyzes resume skills against the selected career role.
 
 Provides:
 
-- Matching skills
-- Role compatibility score
-- Missing skills
-- Personalized improvement roadmap
+* Role compatibility score
+* Matching skills
+* Profile strength analysis
+* Personalized growth roadmap
 
 ---
 
@@ -55,49 +77,50 @@ Identifies missing skills required for the selected role.
 
 Provides:
 
-- Skill importance
-- Learning topics
-- Improvement suggestions
+* Missing technical skills
+* Importance of each skill
+* Learning topics
+* Improvement suggestions
 
 ---
 
 ## 🛣 Career Roadmap
 
-Provides a structured learning path:
+Generates a structured learning path.
 
-- Beginner skills
-- Intermediate skills
-- Advanced skills
+Includes:
 
-Tracks:
-
-- Completed skills
-- Learning progress
-- Completion percentage
+* Beginner skills
+* Intermediate skills
+* Advanced skills
+* Progress tracking
+* Completion percentage
 
 ---
 
 ## 🎤 Interview Preparation
 
-AI-based interview preparation module:
+AI-powered interview preparation module.
 
-- Technical questions
-- HR questions
-- Answer evaluation
-- Performance score
-- Feedback generation
+Features:
+
+* Technical interview questions
+* HR interview questions
+* Answer evaluation
+* Performance score
+* AI-generated feedback
 
 ---
 
 ## 📑 Career Report
 
-Generates a personalized career report containing:
+Generates a personalized career analysis report containing:
 
-- Resume ATS score
-- Skills profile
-- Career recommendations
-- Target role analysis
-- Skill gaps
+* ATS score
+* Skill profile
+* Career recommendations
+* Target role analysis
+* Skill gaps
 
 Export available as PDF.
 
@@ -107,10 +130,10 @@ Export available as PDF.
 
 Creates personalized cover letters based on:
 
-- Target company
-- Job role
-- Resume skills
-- Candidate profile
+* Target company
+* Job role
+* Resume skills
+* Candidate profile
 
 ---
 
@@ -119,31 +142,31 @@ Creates personalized cover letters based on:
 ```
 Resume Upload
 
-⬇️
+        ↓
 
 PDF Text Extraction
 
-⬇️
+        ↓
 
 Resume Analysis + Skill Extraction
 
-⬇️
+        ↓
 
 Career Recommendation Engine
 
-⬇️
+        ↓
 
 Role Matching + Skill Gap Detection
 
-⬇️
+        ↓
 
-Learning Roadmap
+Personalized Learning Roadmap
 
-⬇️
+        ↓
 
 Interview Preparation
 
-⬇️
+        ↓
 
 Career Report & Cover Letter Generation
 ```
@@ -154,45 +177,50 @@ Career Report & Cover Letter Generation
 
 ## Programming Language
 
-- Python
+* Python
 
 ## Frontend
 
-- Streamlit
+* Streamlit
 
 ## Machine Learning
 
-- Scikit-learn
-- NLP techniques
-- Rule-based recommendation system
+* Scikit-learn
+* NLP techniques
+* Rule-based recommendation system
 
 ## Data Processing
 
-- Pandas
-- NumPy
+* Pandas
+* NumPy
+
+## AI Integration
+
+* Google Gemini API
 
 ## Database
 
-- SQLite
+* SQLite
 
 ## PDF Processing
 
-- PyPDF
+* PyMuPDF
+* PyPDF2
 
 ## Report Generation
 
-- ReportLab
+* ReportLab
 
 ## Version Control
 
-- Git
-- GitHub
+* Git
+* GitHub
 
 ---
 
 # 📂 Project Structure
 
-```text
+```
 CareerPilot-AI/
 
 │
@@ -213,52 +241,93 @@ CareerPilot-AI/
 │   ├── career.py
 │   ├── role_analyzer.py
 │   ├── interview_ai.py
+│   ├── gemini.py
 │   └── pdf_parser.py
 │
 ├── database/
-│   ├── careerpilot.db
+│   ├── create_tables.py
 │   └── db_operations.py
 │
-└── requirements.txt
+├── screenshots/
+│
+├── requirements.txt
+│
+└── README.md
 ```
+
+---
+
+# 📸 Application Screenshots
+
+## 🏠 Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+## 📄 Resume Analyzer
+
+![Resume Analyzer](screenshots/resume_analyzer.png)
+
+## 🎯 Target Role Analyzer
+
+![Target Role Analyzer](screenshots/T_R_A_\(1\).png)
+
+## 🧠 Skill Gap Analysis
+
+![Skill Gap](screenshots/skill_gap_\(1\).png)
+
+## 🛣 Career Roadmap
+
+![Career Roadmap](screenshots/roadmap.png)
+
+## 🎤 Interview Preparation
+
+![Interview](screenshots/interview.png)
+
+## 📑 Career Report
+
+![Career Report](screenshots/career_report.png)
+
+## ✍ Cover Letter Generator
+
+![Cover Letter](screenshots/cover_letter.png)
 
 ---
 
 # ⚙ Installation
 
-## Clone the repository
+Clone the repository:
 
 ```bash
 git clone https://github.com/anu-mahekar/CareerPilot-AI.git
 ```
 
-## Navigate to project folder
+Navigate to the project folder:
 
 ```bash
 cd CareerPilot-AI
 ```
 
-## Create virtual environment
+Create virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
-## Activate environment
+Activate environment:
 
-Windows:
+### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-## Install dependencies
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run application
+Run application:
 
 ```bash
 streamlit run app.py
@@ -266,85 +335,25 @@ streamlit run app.py
 
 ---
 
-# 🎯 Applications
+# 🔮 Future Enhancements
 
-- Student career guidance
-- Resume improvement
-- Interview preparation
-- Skill development planning
-- AI-assisted job preparation
-
----
-
-# 🚀 Future Enhancements
-
-- Integration with real job portals
-- Advanced LLM-based career recommendations
-- Resume improvement suggestions
-- LinkedIn profile analysis
-- Cloud deployment
+* Advanced AI-based resume improvement suggestions
+* Real-time job recommendation system
+* LinkedIn profile analyzer
+* Cloud database integration
+* More AI interview scenarios
 
 ---
-
-# 🎥 Demo Video
-
-Watch the complete working demo of CareerPilot-AI:
-
-[▶ Click here to watch the demo](demo/CareerPilot_AI_Demo.mp4)
-
----
-
-# 📸 Screenshots
-
-## 🏠 Dashboard
-
-![Dashboard](screenshots/dashboard.png)
-
----
-
-## 📄 Resume Analyzer
-
-![Resume Analyzer](screenshots/resume_analyzer.png)
-
----
-
-## 🎯 Target Role Analyzer
-
-![Target Role Analyzer](screenshots/T_R_A(1).png)
-
----
-
-## 🧠 Skill Gap Analysis
-
-![Skill Gap](screenshots/skill_gap(1).png)
-
----
-
-## 🛣 Career Roadmap
-
-![Career Roadmap](screenshots/roadmap.png)
-
----
-
-## 🎤 Interview Preparation
-
-![Interview Preparation](screenshots/interview.png)
-
----
-
-## 📑 Career Report
-
-![Career Report](screenshots/career_report.png)
-
----
-
-## ✍ Cover Letter Generator
-
-![Cover Letter](screenshots/cover_letter.png)
-
 
 # 👩‍💻 Author
 
 **Anusha Ullas Mahekar**
 
 B.E Artificial Intelligence & Machine Learning
+
+GitHub:
+https://github.com/anu-mahekar
+
+---
+
+⭐ If you find this project useful, consider giving it a star!
