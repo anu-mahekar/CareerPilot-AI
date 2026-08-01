@@ -286,6 +286,63 @@ streamlit run app.py
 
 ---
 
+# 🎥 Demo Video
+
+Watch the complete working demo of CareerPilot-AI:
+
+[▶ Click here to watch the demo](demo/CareerPilot_AI_Demo.mp4)
+
+---
+
+# 📸 Screenshots
+
+## 🏠 Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+## 📄 Resume Analyzer
+
+![Resume Analyzer](screenshots/resume_analyzer.png)
+
+---
+
+## 🎯 Target Role Analyzer
+
+![Target Role Analyzer](screenshots/T_R_A(1).png)
+
+---
+
+## 🧠 Skill Gap Analysis
+
+![Skill Gap](screenshots/skill_gap(1).png)
+
+---
+
+## 🛣 Career Roadmap
+
+![Career Roadmap](screenshots/roadmap.png)
+
+---
+
+## 🎤 Interview Preparation
+
+![Interview Preparation](screenshots/interview.png)
+
+---
+
+## 📑 Career Report
+
+![Career Report](screenshots/career_report.png)
+
+---
+
+## ✍ Cover Letter Generator
+
+![Cover Letter](screenshots/cover_letter.png)
+
+
 # 👩‍💻 Author
 
 **Anusha Ullas Mahekar**
