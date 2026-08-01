@@ -16,3 +16,5 @@ __pycache__/
 
 # Uploaded user files
 uploads/
+
+demo/*.mp4
