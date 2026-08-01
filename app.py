@@ -9,7 +9,8 @@ from database.db_operations import (
     get_roadmap_progress,
     get_interview_progress
 )
-
+from database.create_tables import create_database
+create_database()
 # ---------------- PAGE CONFIGURATION ----------------
 
 st.set_page_config(
