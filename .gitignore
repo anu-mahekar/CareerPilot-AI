@@ -18,3 +18,5 @@ __pycache__/
 uploads/
 
 demo/*.mp4
+
+database/careerpilot.db
